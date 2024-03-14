@@ -14,6 +14,7 @@ def create_database():
     conn.commit()
     conn.close()
 
+count1 = 0  # Définition de count1 dans la portée globale avec une valeur par défaut
 def search_BET():
     global count1
     search_BET1 = search_entry_BET1.get()
@@ -25,7 +26,7 @@ def search_BET():
     c2 = conn.cursor()
 
     query = f"SELECT PAYS,TEAMS,BET1,BETX,BET2,SCORE,BUT1,BUT2,RESULTAT,PM,BUT FROM {table_name} WHERE 1=1"
-    query2 =f"SELECT COUNT(*) FROM {table_name} WHERE 1=1"
+    query2 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1"
     parameters = []
 
     if search_entry_BET1:
@@ -42,17 +43,36 @@ def search_BET():
         query += " AND BET2 LIKE ?"
         query2 += " AND BET2 LIKE ?"
         parameters.append(search_BET2 + '%')
-    
-    c.execute(query, parameters)
-    c2.execute(query2, parameters)
 
-    rows = c.fetchall()
-    count1 = c2.fetchone()[0]
+    print("Requête de sélection:", query)
+    print("Requête de comptage:", query2)
+
+    try:
+        c.execute(query, parameters)
+        rows = c.fetchall()
+
+        # Exécuter la requête de comptage
+        c2.execute(query2, parameters)
+        count_result = c2.fetchone()
+
+        if count_result:  # Vérifier si count_result n'est pas None
+            count1 = count_result[0]  # Mettre à jour count1 si la requête de comptage a retourné des résultats
+        else:
+            count1 = 0  # Sinon, définir count1 à zéro
+
+        conn.close()
+
+        update_treeview(rows)
+        print("Nombre de lignes dans la colonne 'count1':", count1)
+        print("Nombre de lignes dans la colonne 'rows':", len(rows))  # Afficher le nombre de lignes dans rows pour débogage
+    except sqlite3.Error as e:
+        print("Erreur SQLite:", e)
+
+
 
     conn.close()
     update_treeview(rows)
-
-    print("Nombre de lignes dans la colonne 'ID':", count1)
+    print("Nombre de lignes dans la colonne 'count1':", count1)
     
 
 def update_treeview(rows):
@@ -60,6 +80,7 @@ def update_treeview(rows):
         data_tree.delete(i)
     for row in rows:
         data_tree.insert('', 'end', values=row)
+        
 
 create_database()
 
@@ -78,11 +99,11 @@ rows = c.fetchall()
 c.execute(f"SELECT COUNT(*) FROM {table_name}")
 
 # Récupérez le résultat de la requête
-count = c.fetchone()[0]
-
+count = c.fetchone()[0] 
 conn.close()
 
 print("Nombre de lignes dans la colonne 'ID':", count)
+
 
 # Création de la fenêtre principale
 root = tk.Tk()
@@ -178,6 +199,6 @@ scrollbar_x.pack(side="bottom", fill="x")
 data_tree.configure(xscrollcommand=scrollbar_x.set)
 
 
-update_treeview(rows)
 
+update_treeview(rows)
 root.mainloop()
