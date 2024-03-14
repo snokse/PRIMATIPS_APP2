@@ -130,7 +130,7 @@ frame3.pack(side="left", fill="y")  # Remplir verticalement
 
 # Création des labels dans un tableau 8x7
 label_texts = [
-    count, "1", "X", "2", "PM", "B/SB", "TOTAL",
+    count, count1, "X", "2", "PM", "B/SB", "TOTAL",
     "1", "Label 9", "Label 10", "Label 11", "Label 12", "Label 13", "Label 14",
     "X", "Label 16", "Label 17", "Label 18", "Label 19", "Label 20", "Label 21",
     "2", "Label 23", "Label 24", "Label 25", "Label 26", "Label 27", "Label 28",
