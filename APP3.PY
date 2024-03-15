@@ -11,11 +11,12 @@ def create_database():
     table_name = "primatips_table"
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
-    conn.commit()
+    #conn.commit()
     conn.close()
 
-count1 = 0  # Définition de count1 dans la portée globale avec une valeur par défaut
+
 def search_BET():
+    global count1  # Déclarer count1 comme une variable globale
     search_BET1 = search_entry_BET1.get()
     search_BETX = search_entry_BETX.get()
     search_BET2 = search_entry_BET2.get()
@@ -59,14 +60,15 @@ def search_BET():
         conn.commit()  # Commit changes (if necessary)
         conn.close()
 
+        
+
         print("Nombre de lignes dans la colonne 'count1':", count1)
         print("Nombre de lignes dans la colonne 'len(rows)':", len(rows))  # Afficher le nombre de lignes dans rows pour débogage
 
     except sqlite3.Error as e:
         print("Erreur SQLite:", e)
 
-
-
+    update_label_texts()  # Mettre à jour les textes des labels après avoir obtenu count1
     conn.close()
     update_treeview(rows)
     
@@ -74,7 +76,7 @@ def search_BET():
 def update_treeview(rows):
     for i in data_tree.get_children():
         data_tree.delete(i)
-    for row in rows:
+    for row in rows[:20]:
         data_tree.insert('', 'end', values=row)
 
 def show_previous():
@@ -101,7 +103,8 @@ rows = c.fetchall()
 # Exécutez la requête SELECT pour compter le nombre de lignes
 c.execute(f"SELECT COUNT(*) FROM {table_name}")
 # Récupérez le résultat de la requête
-count = c.fetchone()[0] 
+count = c.fetchone()[0]
+count1 = count # Définition de count1 dans la portée globale avec une valeur par défaut
 conn.close()
 
 
@@ -109,11 +112,16 @@ conn.close()
 root = tk.Tk()
 root.title("PRIMATIPS BET")
 #largeur_fenetre = root.winfo_screenwidth() // 2   # Largeur de la moitié de l'écran
-largeur_fenetre = root.winfo_screenwidth()   # Largeur de la moitié de l'écran
-hauteur_fenetre = root.winfo_screenheight()   # hauteur de la moitié de l'écran
-root.geometry(f"{largeur_fenetre}x{hauteur_fenetre}")  # Taille de la fenêtre
+# Obtenir la taille de l'écran
+largeur_ecran = root.winfo_screenwidth()   # Largeur de la moitié de l'écran
+hauteur_ecran = root.winfo_screenheight()   # hauteur de la moitié de l'écran
+root.geometry(f"{largeur_ecran}x{hauteur_ecran}")  # Taille de la fenêtre
 root.iconbitmap("IMG/PRIMATIPS_ICO.ico")
 root.config(background="#002f5e")
+
+# Ajuster la taille de la fenêtre pour qu'elle prenne la taille de l'écran
+root.geometry(f"{largeur_ecran}x{hauteur_ecran}")
+root.state('zoomed')  # Pour Windows
 
 # Frame 1 : Logo et Titre
 frame1 = tk.Frame(root, bg="#007acc")
@@ -124,7 +132,7 @@ label_logo = tk.Label(frame1, image=logo, bg="#007acc")
 label_logo.pack()
 
 # Frame 2 : Labels, Entries et Button
-frame2 = tk.Frame(root, bg="#007acc", width=largeur_fenetre)
+frame2 = tk.Frame(root, bg="#007acc", width=largeur_ecran)
 frame2.pack(padx=5, pady=5, fill="x")  # Remplir horizontalement avec un padding
 # Labels
 label1 = tk.Label(frame2, text="1")
@@ -146,29 +154,33 @@ button = tk.Button(frame2, text="Valider", command=search_BET)
 button.grid(row=3, columnspan=4, pady=10)
 
 # Frame 3 : Vide de couleur rouge
-frame3 = tk.Frame(root, bg="#007acc", width=largeur_fenetre // 2)  # Largeur de moitié de la fenêtre
+frame3 = tk.Frame(root, bg="#007acc", width=largeur_ecran // 2)  # Largeur de moitié de la fenêtre
 frame3.pack(side="left", fill="y")  # Remplir verticalement
 
 # Création des labels dans un tableau 8x7
-label_texts = [
-    count, count1, "X", "2", "PM", "B/SB", "TOTAL",
-    "1", "Label 9", "Label 10", "Label 11", "Label 12", "Label 13", "Label 14",
-    "X", "Label 16", "Label 17", "Label 18", "Label 19", "Label 20", "Label 21",
-    "2", "Label 23", "Label 24", "Label 25", "Label 26", "Label 27", "Label 28",
-    "1X", "Label 30", "Label 31", "Label 32", "Label 33", "Label 34", "Label 35",
-    "12", "Label 37", "Label 38", "Label 39", "Label 40", "Label 41", "Label 42",
-    "X2", "Label 44", "Label 45", "Label 46", "Label 47", "Label 48", "Label 49",
-    "1X2", "Label 51", "Label 52", "Label 53", "Label 54", "Label 55", "Label 56"
-]
 
-labels = []
-for i in range(8):
-    row_labels = []
-    for j in range(7):
-        label_text = label_texts[i * 7 + j]
-        label = create_label_with_border(frame3, label_text, i, j)
-        row_labels.append(label)
-    labels.append(row_labels)
+def update_label_texts():
+
+    label_texts = [
+        "NBR : "+str(count1), "1", "X", "2", "PM", "B/SB", "TOTAL",
+        "1", "Label 9", "Label 10", "Label 11", "Label 12", "Label 13", "Label 14",
+        "X", "Label 16", "Label 17", "Label 18", "Label 19", "Label 20", "Label 21",
+        "2", "Label 23", "Label 24", "Label 25", "Label 26", "Label 27", "Label 28",
+        "1X", "Label 30", "Label 31", "Label 32", "Label 33", "Label 34", "Label 35",
+        "12", "Label 37", "Label 38", "Label 39", "Label 40", "Label 41", "Label 42",
+        "X2", "Label 44", "Label 45", "Label 46", "Label 47", "Label 48", "Label 49",
+        "1X2", "Label 51", "Label 52", "Label 53", "Label 54", "Label 55", "Label 56"
+    ]
+    # Création des labels dans un tableau 8x7
+    labels = []  # Définir labels en dehors de toute fonction pour qu'il soit global
+    for i in range(8):
+        row_labels = []
+        for j in range(7):
+            label_text = label_texts[i * 7 + j]
+            label = create_label_with_border(frame3, label_text, i, j)
+            row_labels.append(label)
+        labels.append(row_labels)
+
 
 
 # Frame 4 : Affichage des données MySQL
@@ -191,6 +203,10 @@ data_tree.heading("PM", text="PM")
 data_tree.heading("BUT", text="BUT")
 data_tree.pack(fill="both", expand=True)  # Remplir et étendre dans toutes les directions
 
+
+
+
+
 # Frame pour les boutons Suivant et Précédent
 frame_buttons = tk.Frame(frame4)
 frame_buttons.pack()
@@ -206,5 +222,7 @@ scrollbar_x = ttk.Scrollbar(frame4, orient="horizontal", command=data_tree.xview
 scrollbar_x.pack(side="bottom", fill="x")
 data_tree.configure(xscrollcommand=scrollbar_x.set)
 
+# Après la définition des frames, exécutez la recherche initiale
+search_BET()
 update_treeview(rows)
 root.mainloop()
