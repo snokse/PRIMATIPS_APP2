@@ -8,7 +8,7 @@ from tkinter import ttk
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def create_database():
     global db_name, table_name
-    db_name = "DB/primatips.sqlite"
+    db_name = "DB/primatip.sqlite"
     table_name = "primatips_table"
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
@@ -34,24 +34,26 @@ def search_BET():
     queryCount = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1"
     # Requête pour compter 1 
     
-    queryCount_1_1 = f"SELECT COUNT(*) FROM {table_name} WHERE RESULTAT=1  AND BET1 LIKE '{search_BET1}%'"
-    queryCount_1_X = f"SELECT COUNT(*) FROM {table_name} WHERE RESULTAT='X'  AND BET1 LIKE '{search_BET1}%'"
-    queryCount_1_2 = f"SELECT COUNT(*) FROM {table_name} WHERE RESULTAT=2  AND BET1 LIKE '{search_BET1}%'"
+    queryCount_1_1 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=1  AND BET1 LIKE '{search_BET1}%'"
+    queryCount_1_X = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT='X'  AND BET1 LIKE '{search_BET1}%'"
+    queryCount_1_2 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=2  AND BET1 LIKE '{search_BET1}%'"
     # Requête pour compter X
-    queryCount_X_1 = f"SELECT COUNT(*) FROM {table_name} WHERE RESULTAT=1  AND BETX LIKE '{search_BETX}%'"
-    queryCount_X_X = f"SELECT COUNT(*) FROM {table_name} WHERE RESULTAT='X'  AND BETX LIKE '{search_BETX}%'"
-    queryCount_X_2 = f"SELECT COUNT(*) FROM {table_name} WHERE RESULTAT=2  AND BETX LIKE '{search_BETX}%'"
+    queryCount_X_1 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=1  AND BETX LIKE '{search_BETX}%'"
+    queryCount_X_X = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT='X'  AND BETX LIKE '{search_BETX}%'"
+    queryCount_X_2 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=2  AND BETX LIKE '{search_BETX}%'"
     # Requête pour compter 2
-    queryCount_2_1 = f"SELECT COUNT(*) FROM {table_name} WHERE RESULTAT=1  AND BET2 LIKE '{search_BET2}%'"
-    queryCount_2_X = f"SELECT COUNT(*) FROM {table_name} WHERE RESULTAT='X'  AND BET2 LIKE '{search_BET2}%'"
-    queryCount_2_2 = f"SELECT COUNT(*) FROM {table_name} WHERE RESULTAT=2  AND BET2 LIKE '{search_BET2}%'"
+    queryCount_2_1 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=1  AND BET2 LIKE '{search_BET2}%'"
+    queryCount_2_X = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT='X'  AND BET2 LIKE '{search_BET2}%'"
+    queryCount_2_2 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=2  AND BET2 LIKE '{search_BET2}%'"
 
     parameters = []
+    parameters1X = []
 
     if search_entry_BET1:
         query += " AND BET1 LIKE ?"
         queryCount += " AND BET1 LIKE ?"
         parameters.append(f"{search_BET1}%")
+
 
     if search_entry_BETX:
         query += " AND BETX LIKE ?"
@@ -63,21 +65,23 @@ def search_BET():
         queryCount += " AND BET2 LIKE ?"
         parameters.append(f"{search_BET2}%")
 
+
+
     try:
+        # Exécuter la requête d'affichage
         c.execute(query, parameters)
         rows = c.fetchall()
-
         # Exécuter la requête de comptage
         cursorCount.execute(queryCount, parameters)
-        count_result = cursorCount.fetchone()
+        countALL = cursorCount.fetchone()
 
-
-        if count_result:  # Vérifier si count_result n'est pas None
-            countALL = count_result[0]  # Mettre à jour count1 si la requête de comptage a retourné des résultats
+        if countALL:  # Vérifier si count_result n'est pas None
+            countALL = countALL[0]  # Mettre à jour count1 si la requête de comptage a retourné des résultats
         else:
             countALL = 0  # Sinon, définir count1 à zéro
 
-        # Exécuter la requête pour compter 1
+
+        # Exécuter la requête pour compter 1        
         cursorCount.execute(queryCount_1_1)
         countDic["count_1_1"] = cursorCount.fetchone()[0]
         cursorCount.execute(queryCount_1_X)
@@ -170,13 +174,13 @@ conn.close()
 # dictionnaire countDic basé sur la liste liste1 avec des valeurs initiales de 0
 def initialize_count_dictionary():
     countListe = [
-        "count_1_1", "count_1_X", "count_1_2", "count_1_PM", "count_1_BUT",
-        "count_X_1", "count_X_X", "count_X_2", "count_X_PM", "count_X_BUT",
-        "count_2_1", "count_2_X", "count_2_2", "count_2_PM", "count_2_BUT",
-        "count_1X_1", "count_1X_X", "count_1X_2", "count_1X_PM", "count_1X_BUT",
-        "count_12_1", "count_12_X", "count_12_2", "count_12_PM", "count_12_BUT",
-        "count_X2_1", "count_X2_X", "count_X2_2", "count_X2_PM", "count_X2_BUT",
-        "count_1X2_1", "count_1X2_X", "count_1X2_2", "count_1X2_PM", "count_1X2_BUT"
+        "count_1_1", "count_1_X", "count_1_2", "count_1_PM", "count_1_BUT", "count_1",
+        "count_X_1", "count_X_X", "count_X_2", "count_X_PM", "count_X_BUT", "count_X",
+        "count_2_1", "count_2_X", "count_2_2", "count_2_PM", "count_2_BUT", "count_2",
+        "count_1X_1", "count_1X_X", "count_1X_2", "count_1X_PM", "count_1X_BUT", "count_1X",
+        "count_12_1", "count_12_X", "count_12_2", "count_12_PM", "count_12_BUT", "count_12",
+        "count_X2_1", "count_X2_X", "count_X2_2", "count_X2_PM", "count_X2_BUT", "count_X2",
+        "count_1X2_1", "count_1X2_X", "count_1X2_2", "count_1X2_PM", "count_1X2_BUT", "count_1X2"
     ]
     countDic = {}
     for key in countListe:
@@ -250,13 +254,13 @@ def update_label_texts():
 
     label_texts = [
         "NBR : "+str(countALL), "1", "X", "2", "PM", "B/SB", "TOTAL",
-        "1 : ( " +str(search_entry_BET1.get())+")", countDic["count_1_1"] , countDic["count_1_X"], countDic["count_1_2"], countDic["count_1_PM"], countDic["count_1_BUT"], "Label 14",
-        "X : ( " +str(search_entry_BETX.get())+")", countDic["count_X_1"] , countDic["count_X_X"], countDic["count_X_2"], countDic["count_X_PM"], countDic["count_X_BUT"], "Label 21",
-        "2 : ( " +str(search_entry_BET2.get())+")", countDic["count_2_1"] , countDic["count_2_X"], countDic["count_2_2"], countDic["count_2_PM"], countDic["count_2_BUT"], "Label 28",
-        "1X", countDic["count_1X_1"] , countDic["count_1X_X"], countDic["count_1X_2"], countDic["count_1X_PM"], countDic["count_1X_BUT"], "Label 35",
-        "12", countDic["count_12_1"] , countDic["count_12_X"], countDic["count_12_2"], countDic["count_12_PM"], countDic["count_12_BUT"], "Label 42",
-        "X2", countDic["count_X2_1"] , countDic["count_X2_X"], countDic["count_X2_2"], countDic["count_X2_PM"], countDic["count_X2_BUT"], "Label 49",
-        "1X2", countDic["count_1X2_1"] , countDic["count_1X2_X"], countDic["count_1X2_2"], countDic["count_1X2_PM"], countDic["count_1X2_BUT"], "Label 56"
+        "1 : ( " +str(search_entry_BET1.get())+")", countDic["count_1_1"] , countDic["count_1_X"], countDic["count_1_2"], countDic["count_1_PM"], countDic["count_1_BUT"], countDic["count_1"],
+        "X : ( " +str(search_entry_BETX.get())+")", countDic["count_X_1"] , countDic["count_X_X"], countDic["count_X_2"], countDic["count_X_PM"], countDic["count_X_BUT"], countDic["count_X"],
+        "2 : ( " +str(search_entry_BET2.get())+")", countDic["count_2_1"] , countDic["count_2_X"], countDic["count_2_2"], countDic["count_2_PM"], countDic["count_2_BUT"], countDic["count_2"],
+        "1X", countDic["count_1X_1"] , countDic["count_1X_X"], countDic["count_1X_2"], countDic["count_1X_PM"], countDic["count_1X_BUT"], countDic["count_1X"],
+        "12", countDic["count_12_1"] , countDic["count_12_X"], countDic["count_12_2"], countDic["count_12_PM"], countDic["count_12_BUT"], countDic["count_12"],
+        "X2", countDic["count_X2_1"] , countDic["count_X2_X"], countDic["count_X2_2"], countDic["count_X2_PM"], countDic["count_X2_BUT"], countDic["count_X2"],
+        "1X2", countDic["count_1X2_1"] , countDic["count_1X2_X"], countDic["count_1X2_2"], countDic["count_1X2_PM"], countDic["count_1X2_BUT"], countDic["count_1X2"]
     ]
     # Création des labels dans un tableau 8x7
     labels = []  # Définir labels en dehors de toute fonction pour qu'il soit global
