@@ -33,18 +33,6 @@ def search_BET():
     # Requête pour compter
     queryCount = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1"
     # Requête pour compter 1 
-    
-    queryCount_1_1 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=1  AND BET1 LIKE '{search_BET1}%'"
-    queryCount_1_X = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT='X'  AND BET1 LIKE '{search_BET1}%'"
-    queryCount_1_2 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=2  AND BET1 LIKE '{search_BET1}%'"
-    # Requête pour compter X
-    queryCount_X_1 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=1  AND BETX LIKE '{search_BETX}%'"
-    queryCount_X_X = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT='X'  AND BETX LIKE '{search_BETX}%'"
-    queryCount_X_2 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=2  AND BETX LIKE '{search_BETX}%'"
-    # Requête pour compter 2
-    queryCount_2_1 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=1  AND BET2 LIKE '{search_BET2}%'"
-    queryCount_2_X = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT='X'  AND BET2 LIKE '{search_BET2}%'"
-    queryCount_2_2 = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1 AND RESULTAT=2  AND BET2 LIKE '{search_BET2}%'"
 
     parameters = []
     parameters1X = []
@@ -52,18 +40,70 @@ def search_BET():
     if search_entry_BET1:
         query += " AND BET1 LIKE ?"
         queryCount += " AND BET1 LIKE ?"
+        queryCount1 = queryCount
+        queryCount_1_1 = queryCount1 + " AND RESULTAT=1"
+        queryCount_1_X = queryCount1 + " AND RESULTAT='X'"
+        queryCount_1_2 = queryCount1 + " AND RESULTAT=2"
+
         parameters.append(f"{search_BET1}%")
 
+
+        cursorCount.execute(queryCount1, parameters)
+        countDic["count_1"] = cursorCount.fetchone()[0]
+
+        cursorCount.execute(queryCount_1_1, parameters)
+        countDic["count_1_1"] = cursorCount.fetchone()[0]
+
+        cursorCount.execute(queryCount_1_X, parameters)
+        countDic["count_1_X"] = cursorCount.fetchone()[0]
+
+        cursorCount.execute(queryCount_1_2, parameters)
+        countDic["count_1_2"] = cursorCount.fetchone()[0]
 
     if search_entry_BETX:
         query += " AND BETX LIKE ?"
         queryCount += " AND BETX LIKE ?"
+        queryCountX = queryCount
+        queryCount_X_1 = queryCountX + " AND RESULTAT=1"
+        queryCount_X_X = queryCountX + " AND RESULTAT='X'"
+        queryCount_X_2 = queryCountX + " AND RESULTAT=2"
+
         parameters.append(f"{search_BETX}%")
+
+        cursorCount.execute(queryCountX, parameters)
+        countDic["count_X"] = cursorCount.fetchone()[0]
+
+        cursorCount.execute(queryCount_X_1, parameters)
+        countDic["count_X_1"] = cursorCount.fetchone()[0]
+
+        cursorCount.execute(queryCount_X_X, parameters)
+        countDic["count_X_X"] = cursorCount.fetchone()[0]
+
+        cursorCount.execute(queryCount_X_2, parameters)
+        countDic["count_X_2"] = cursorCount.fetchone()[0]
 
     if search_entry_BET2:
         query += " AND BET2 LIKE ?"
         queryCount += " AND BET2 LIKE ?"
+        queryCount2 = queryCount
+        queryCount_2_1 = queryCount2 + " AND RESULTAT=1"
+        queryCount_2_X = queryCount2 + " AND RESULTAT='X'"
+        queryCount_2_2 = queryCount2 + " AND RESULTAT=2"
+
         parameters.append(f"{search_BET2}%")
+
+
+        cursorCount.execute(queryCount2, parameters)
+        countDic["count_2"] = cursorCount.fetchone()[0]
+
+        cursorCount.execute(queryCount_2_1, parameters)
+        countDic["count_2_1"] = cursorCount.fetchone()[0]
+
+        cursorCount.execute(queryCount_2_X, parameters)
+        countDic["count_2_X"] = cursorCount.fetchone()[0]
+
+        cursorCount.execute(queryCount_2_2, parameters)
+        countDic["count_2_2"] = cursorCount.fetchone()[0]
 
 
 
@@ -82,28 +122,28 @@ def search_BET():
 
 
         # Exécuter la requête pour compter 1        
-        cursorCount.execute(queryCount_1_1)
-        countDic["count_1_1"] = cursorCount.fetchone()[0]
-        cursorCount.execute(queryCount_1_X)
-        countDic["count_1_X"] = cursorCount.fetchone()[0]
-        cursorCount.execute(queryCount_1_2)
-        countDic["count_1_2"] = cursorCount.fetchone()[0]
+        # cursorCount.execute(queryCount_1_1)
+        # countDic["count_1_1"] = cursorCount.fetchone()[0]
+        # cursorCount.execute(queryCount_1_X)
+        # countDic["count_1_X"] = cursorCount.fetchone()[0]
+        # cursorCount.execute(queryCount_1_2)
+        # countDic["count_1_2"] = cursorCount.fetchone()[0]
 
         # Exécuter la requête pour compter X
-        cursorCount.execute(queryCount_X_1)
-        countDic["count_X_1"] = cursorCount.fetchone()[0]
-        cursorCount.execute(queryCount_X_X)
-        countDic["count_X_X"] = cursorCount.fetchone()[0]
-        cursorCount.execute(queryCount_X_2)
-        countDic["count_X_2"] = cursorCount.fetchone()[0]
+        # cursorCount.execute(queryCount_X_1)
+        # countDic["count_X_1"] = cursorCount.fetchone()[0]
+        # cursorCount.execute(queryCount_X_X)
+        # countDic["count_X_X"] = cursorCount.fetchone()[0]
+        # cursorCount.execute(queryCount_X_2)
+        # countDic["count_X_2"] = cursorCount.fetchone()[0]
 
         # Exécuter la requête pour compter 2
-        cursorCount.execute(queryCount_2_1)
-        countDic["count_2_1"] = cursorCount.fetchone()[0]
-        cursorCount.execute(queryCount_2_X)
-        countDic["count_2_X"] = cursorCount.fetchone()[0]
-        cursorCount.execute(queryCount_2_2)
-        countDic["count_2_2"] = cursorCount.fetchone()[0]
+        # cursorCount.execute(queryCount_2_1)
+        # countDic["count_2_1"] = cursorCount.fetchone()[0]
+        # cursorCount.execute(queryCount_2_X)
+        # countDic["count_2_X"] = cursorCount.fetchone()[0]
+        # cursorCount.execute(queryCount_2_2)
+        # countDic["count_2_2"] = cursorCount.fetchone()[0]
 
         # Mettre à jour les textes des labels après avoir obtenu count1
         conn.commit()  # Valider les modifications dans la base de données
