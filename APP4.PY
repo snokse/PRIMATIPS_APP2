@@ -18,7 +18,7 @@ def create_database():
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def search_BET():
-    global countALL  # Déclarer count1 comme une variable globale
+    global countALL,countDic  # Déclarer count1 comme une variable globale
     search_BET1 = search_entry_BET1.get()
     search_BETX = search_entry_BETX.get()
     search_BET2 = search_entry_BET2.get()
@@ -35,9 +35,13 @@ def search_BET():
     # Requête pour compter 1 
 
     parameters = []
-    parameters1X = []
 
-    if search_entry_BET1:
+    countDic["count_1"] = 0
+    countDic["count_X"] = 0
+    countDic["count_2"] = 0
+
+    if search_BET1:
+        countDic = initialize_count_dictionary()
         query += " AND BET1 LIKE ?"
         queryCount += " AND BET1 LIKE ?"
         queryCount1 = queryCount
@@ -46,8 +50,7 @@ def search_BET():
         queryCount_1_2 = queryCount1 + " AND RESULTAT=2"
 
         parameters.append(f"{search_BET1}%")
-
-
+  
         cursorCount.execute(queryCount1, parameters)
         countDic["count_1"] = cursorCount.fetchone()[0]
 
@@ -59,8 +62,10 @@ def search_BET():
 
         cursorCount.execute(queryCount_1_2, parameters)
         countDic["count_1_2"] = cursorCount.fetchone()[0]
+        update_label_texts() 
 
-    if search_entry_BETX:
+    if search_BETX:
+        countDic = initialize_count_dictionary()
         query += " AND BETX LIKE ?"
         queryCount += " AND BETX LIKE ?"
         queryCountX = queryCount
@@ -81,8 +86,10 @@ def search_BET():
 
         cursorCount.execute(queryCount_X_2, parameters)
         countDic["count_X_2"] = cursorCount.fetchone()[0]
+        update_label_texts() 
 
-    if search_entry_BET2:
+    if search_BET2:
+        countDic = initialize_count_dictionary()
         query += " AND BET2 LIKE ?"
         queryCount += " AND BET2 LIKE ?"
         queryCount2 = queryCount
@@ -91,7 +98,6 @@ def search_BET():
         queryCount_2_2 = queryCount2 + " AND RESULTAT=2"
 
         parameters.append(f"{search_BET2}%")
-
 
         cursorCount.execute(queryCount2, parameters)
         countDic["count_2"] = cursorCount.fetchone()[0]
@@ -104,6 +110,7 @@ def search_BET():
 
         cursorCount.execute(queryCount_2_2, parameters)
         countDic["count_2_2"] = cursorCount.fetchone()[0]
+        update_label_texts() 
 
 
 
@@ -147,7 +154,6 @@ def search_BET():
 
         # Mettre à jour les textes des labels après avoir obtenu count1
         conn.commit()  # Valider les modifications dans la base de données
-        initialize_count_dictionary()
         update_treeview(rows)
         conn.close()
 
