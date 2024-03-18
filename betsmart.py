@@ -2,6 +2,8 @@ import sqlite3
 import tkinter as tk
 from tkinter import ttk
 import fonctionMAX
+import tkinter.font as tkFont
+
 
 # from tkinter.ttk import Treeview
 # from tkinter.ttk import Label
@@ -10,8 +12,8 @@ import fonctionMAX
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 def create_database():
     global db_name, table_name
-    db_name = "DB/primatips.sqlite"
-    table_name = "primatips_table"
+    db_name = "DB/betsmart_db.db"
+    table_name = "betsmart_table"
     conn = sqlite3.connect(db_name)
     c = conn.cursor()
     #conn.commit()
@@ -31,6 +33,7 @@ def search_BET():
 
     # Requête d'affichage 
     query = f"SELECT PAYS,TEAMS,BET1,BETX,BET2,SCORE,BUT1,BUT2,RESULTAT,PM,BUT FROM {table_name} WHERE 1=1"
+    query_redoublants = f"SELECT TEAMS, BETX, BET2, RESULTAT COUNT(*) AS nombre_redoublants FROM {table_name} GROUP BY TEAMS, BETX, BET2, RESULTAT HAVING COUNT(*) > 1;"
 
     # Requête pour compter
     queryCount = f"SELECT COUNT(*) FROM {table_name} WHERE 1=1"
@@ -402,7 +405,7 @@ def search_BET():
 
         # dict_max_1
         dict_max_1 = {'1': countDic["count_1_1"], 'X': countDic["count_1_X"], '2': countDic["count_1_2"]}
-        dict_max_X = {'1': countDic["count_X_1"], 'X': countDic["count_X_X"], '2': countDic["count_2_2"]}
+        dict_max_X = {'1': countDic["count_X_1"], 'X': countDic["count_X_X"], '2': countDic["count_X_2"]}
         dict_max_2 = {'1': countDic["count_2_1"], 'X': countDic["count_2_X"], '2': countDic["count_2_2"]}
         dict_max_1X = {'1': countDic["count_1X_1"], 'X': countDic["count_1X_X"], '2': countDic["count_1X_2"]}
         dict_max_12 = {'1': countDic["count_12_1"], 'X': countDic["count_12_X"], '2': countDic["count_12_2"]}
@@ -516,13 +519,13 @@ countDic = initialize_count_dictionary()
 
 # Création de la fenêtre principale
 root = tk.Tk()
-root.title("PRIMATIPS BET")
+root.title("BetSmart Betting Analysis Tool")
 #largeur_fenetre = root.winfo_screenwidth() // 2   # Largeur de la moitié de l'écran
 # Obtenir la taille de l'écran
 largeur_ecran = root.winfo_screenwidth()   # Largeur de la moitié de l'écran
 hauteur_ecran = root.winfo_screenheight()   # hauteur de la moitié de l'écran
 root.geometry(f"{largeur_ecran}x{hauteur_ecran}")  # Taille de la fenêtre
-root.iconbitmap("IMG/PRIMATIPS_ICO.ico")
+root.iconbitmap("IMG/BetSmart_ICO.ico")
 root.config(background="#002f5e")
 
 # Ajuster la taille de la fenêtre pour qu'elle prenne la taille de l'écran
@@ -535,7 +538,7 @@ root.state('zoomed')  # Pour Windows
 frame1 = tk.Frame(root, bg="#007acc")
 frame1.pack(fill="x")  # Remplir horizontalement
 # Ajout du logo au premier frame
-logo = tk.PhotoImage(file="IMG/PRIMATIPS_LOGO.png")
+logo = tk.PhotoImage(file="IMG/BetSmart_LOGO.png")
 label_logo = tk.Label(frame1, image=logo, bg="#007acc")
 label_logo.pack()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -619,6 +622,14 @@ data_tree.heading("PM", text="PM")
 data_tree.heading("BUT", text="BUT")
 data_tree.pack(fill="both", expand=True)  # Remplir et étendre dans toutes les directions
 
+# Ajuster la largeur des colonnes en fonction du contenu
+for column in data_tree['columns']:
+    data_tree.heading(column, text=column, anchor=tk.CENTER)  # Centrer le texte de l'en-tête
+    if column == "TEAMS":
+        data_tree.column(column, anchor=tk.CENTER, width=150)  # Définir une largeur fixe pour la colonne "TEAMS"
+    else:
+        data_tree.column(column, anchor=tk.CENTER, width=tkFont.Font().measure(column))  # Ajuster la largeur de la colonne en fonction de son contenu
+
 # Frame pour les boutons Suivant et Précédent
 frame_buttons = tk.Frame(frame4)
 frame_buttons.pack()
@@ -639,5 +650,5 @@ data_tree.configure(xscrollcommand=scrollbar_x.set)
 
 # Après la définition des frames, exécutez la recherche initiale
 search_BET()
-update_treeview(rows)
+
 root.mainloop()
