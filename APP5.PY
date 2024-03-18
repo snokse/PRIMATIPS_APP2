@@ -377,9 +377,28 @@ def search_BET():
         conn.commit()  # Valider les modifications dans la base de données
         update_treeview(rows)
         conn.close()
-        countDic["count_TIP_1"] = countDic["count_1X_1"] + countDic["count_12_1"] + countDic["count_X2_1"]
-        countDic["count_TIP_X"] = countDic["count_1X_X"] + countDic["count_12_X"] + countDic["count_X2_X"]
-        countDic["count_TIP_2"] = countDic["count_1X_2"] + countDic["count_12_2"] + countDic["count_X2_2"]
+
+        # Mettre à jour TIP1
+        countDic["count_TIP_1_1"] = countDic["count_1X_1"] + countDic["count_12_1"]
+        countDic["count_TIP_1_X"] = countDic["count_1X_X"] + countDic["count_12_X"]
+        countDic["count_TIP_1_2"] = countDic["count_1X_2"] + countDic["count_12_2"]
+
+        # Mettre à jour TIPX
+        countDic["count_TIP_X_1"] = countDic["count_1X_1"] + countDic["count_X2_1"]
+        countDic["count_TIP_X_X"] = countDic["count_1X_X"] + countDic["count_X2_X"]
+        countDic["count_TIP_X_2"] = countDic["count_1X_2"] + countDic["count_X2_2"]
+
+        # Mettre à jour TIP2
+        countDic["count_TIP_2_1"] = countDic["count_12_1"] + countDic["count_X2_1"]
+        countDic["count_TIP_2_X"] = countDic["count_12_X"] + countDic["count_X2_X"]
+        countDic["count_TIP_2_2"] = countDic["count_12_2"] + countDic["count_X2_2"]
+
+        # Mettre à jour TIP
+        countDic["count_TIP_1"] = countDic["count_TIP_1_1"] + countDic["count_TIP_X_1"] + countDic["count_TIP_2_1"]
+        countDic["count_TIP_X"] = countDic["count_TIP_1_X"] + countDic["count_TIP_X_X"] + countDic["count_TIP_2_X"]
+        countDic["count_TIP_2"] = countDic["count_TIP_1_2"] + countDic["count_TIP_X_2"] + countDic["count_TIP_2_2"]
+
+
 
         # print("Nombre de lignes dans la colonne 'count1':", countALL)
         # print("Nombre de lignes dans la colonne 'countDic':", countDic["count_1_1"])
@@ -451,6 +470,9 @@ def initialize_count_dictionary():
         "count_12_1", "count_12_X", "count_12_2", "count_12_P", "count_12_M", "count_12_B", "count_12_SB", "count_12",
         "count_X2_1", "count_X2_X", "count_X2_2", "count_X2_P", "count_X2_M", "count_X2_B", "count_X2_SB", "count_X2",
         "count_1X2_1", "count_1X2_X", "count_1X2_2", "count_1X2_P", "count_1X2_M", "count_1X2_B", "count_1X2_SB", "count_1X2",
+        "count_TIP_1_1", "count_TIP_1_X", "count_TIP_1_2", "count_TIP_1_1", "count_TIP_1_1", "count_TIP_1_1",
+        "count_TIP_X_1", "count_TIP_X_X", "count_TIP_X_2", "count_TIP_1_1", "count_TIP_1_1", "count_TIP_1_1",
+        "count_TIP_2_1", "count_TIP_2_X", "count_TIP_2_2", "count_TIP_1_1", "count_TIP_1_1", "count_TIP_1_1",
         "count_TIP_1", "count_TIP_X", "count_TIP_2", "count_TIP_PM", "count_TIP_BUT", "count_TIP"
     ]
     countDic = {}
@@ -532,11 +554,14 @@ def update_label_texts():
         "12", countDic["count_12_1"] , countDic["count_12_X"], countDic["count_12_2"], str(countDic["count_12_P"]) + " P\n" + str(countDic["count_12_M"]) + " M", str(countDic["count_12_B"]) + " B\n" + str(countDic["count_12_SB"]) + " SB", countDic["count_12"],
         "X2", countDic["count_X2_1"] , countDic["count_X2_X"], countDic["count_X2_2"], str(countDic["count_X2_P"]) + " P\n" + str(countDic["count_X2_M"]) + " M", str(countDic["count_X2_B"]) + " B\n" + str(countDic["count_X2_SB"]) + " SB", countDic["count_X2"],
         "1X2", countDic["count_1X2_1"] , countDic["count_1X2_X"], countDic["count_1X2_2"], str(countDic["count_1X2_P"]) + " P\n" + str(countDic["count_1X2_M"]) + " M", str(countDic["count_1X2_B"]) + " B\n" + str(countDic["count_1X2_SB"]) + " SB", countDic["count_1X2"],
+        "TOTAL TIP 1", countDic["count_TIP_1_1"], countDic["count_TIP_1_X"], countDic["count_TIP_1_2"], "0", "0", "0",
+        "TOTAL TIP X", countDic["count_TIP_X_1"], countDic["count_TIP_X_X"], countDic["count_TIP_X_2"], "0", "0", "0",
+        "TOTAL TIP 2", countDic["count_TIP_2_1"], countDic["count_TIP_2_X"], countDic["count_TIP_2_2"], "0", "0", "0",
         "TOTAL TIP", countDic["count_TIP_1"], countDic["count_TIP_X"], countDic["count_TIP_2"], "0", "0", "0"
     ]
     # Création des labels dans un tableau 8x7
     labels = []  # Définir labels en dehors de toute fonction pour qu'il soit global
-    for i in range(9):
+    for i in range(12):
         row_labels = []
         for j in range(7):
             label_text = label_texts[i * 7 + j]
