@@ -104,6 +104,18 @@ def search_BET():
     queryCount_X2_B = f"SELECT COUNT(*) FROM {table_name} WHERE BETX LIKE '{search_BETX}%' AND BET2 LIKE '{search_BET2}%' AND BUT LIKE 'B'"
     queryCount_X2_SB = f"SELECT COUNT(*) FROM {table_name} WHERE BETX LIKE '{search_BETX}%' AND BET2 LIKE '{search_BET2}%' AND BUT LIKE 'SB'"
 
+    # Requête pour compter 1X2
+    queryCount_1X2 = f"SELECT COUNT(*) FROM {table_name} WHERE BET1 LIKE '{search_BET1}%' AND BETX LIKE '{search_BETX}%' AND BET2 LIKE '{search_BET2}%'"
+    queryCount_1X2_1 = f"SELECT COUNT(*) FROM {table_name} WHERE BET1 LIKE '{search_BET1}%' AND BETX LIKE '{search_BETX}%' AND BET2 LIKE '{search_BET2}%' AND RESULTAT=1"
+    queryCount_1X2_X = f"SELECT COUNT(*) FROM {table_name} WHERE BET1 LIKE '{search_BET1}%' AND BETX LIKE '{search_BETX}%' AND BET2 LIKE '{search_BET2}%' AND RESULTAT='X'"
+    queryCount_1X2_2 = f"SELECT COUNT(*) FROM {table_name} WHERE BET1 LIKE '{search_BET1}%' AND BETX LIKE '{search_BETX}%' AND BET2 LIKE '{search_BET2}%' AND RESULTAT=2"
+    # Requête pour compter 1X P/M 
+    queryCount_1X2_P = f"SELECT COUNT(*) FROM {table_name} WHERE BET1 LIKE '{search_BET1}%' AND BETX LIKE '{search_BETX}%' AND BET2 LIKE '{search_BET2}%' AND PM LIKE 'P'"
+    queryCount_1X2_M = f"SELECT COUNT(*) FROM {table_name} WHERE BET1 LIKE '{search_BET1}%' AND BETX LIKE '{search_BETX}%' AND BET2 LIKE '{search_BET2}%' AND PM LIKE 'M'"
+    # Requête pour compter 1X B/SB
+    queryCount_1X2_B = f"SELECT COUNT(*) FROM {table_name} WHERE BET1 LIKE '{search_BET1}%' AND BETX LIKE '{search_BETX}%' AND BET2 LIKE '{search_BET2}%' AND BUT LIKE 'B'"
+    queryCount_1X2_SB = f"SELECT COUNT(*) FROM {table_name} WHERE BET1 LIKE '{search_BET1}%' AND BETX LIKE '{search_BETX}%' AND BET2 LIKE '{search_BET2}%' AND BUT LIKE 'SB'"
+
     parameters = []
 
     if search_BET1:
@@ -329,10 +341,45 @@ def search_BET():
             countDic["count_X2_B"] = 0
             countDic["count_X2_SB"] = 0
 
+        # Exécuter la requête pour compter 1X2
+        if search_BET1 and search_BETX and search_BET2:
+            cursorCount.execute(queryCount_1X2)
+            countDic["count_1X2"] = cursorCount.fetchone()[0]
+
+            cursorCount.execute(queryCount_1X2_1)
+            countDic["count_1X2_1"] = cursorCount.fetchone()[0]
+            cursorCount.execute(queryCount_1X2_X)
+            countDic["count_1X2_X"] = cursorCount.fetchone()[0]
+            cursorCount.execute(queryCount_1X2_2)
+            countDic["count_1X2_2"] = cursorCount.fetchone()[0]
+            # Exécuter la requête pour compter 1X PM
+            cursorCount.execute(queryCount_1X2_P)
+            countDic["count_1X2_P"] = cursorCount.fetchone()[0]
+            cursorCount.execute(queryCount_1X2_M)
+            countDic["count_1X2_M"] = cursorCount.fetchone()[0]
+
+            # Exécuter la requête pour compter 1X BUT
+            cursorCount.execute(queryCount_1X2_B)
+            countDic["count_1X2_B"] = cursorCount.fetchone()[0]
+            cursorCount.execute(queryCount_1X2_SB)
+            countDic["count_1X2_SB"] = cursorCount.fetchone()[0]
+        else:
+            countDic["count_1X2"] = 0
+            countDic["count_1X2_1"] = 0
+            countDic["count_1X2_X"] = 0
+            countDic["count_1X2_2"] = 0
+            countDic["count_1X2_P"] = 0
+            countDic["count_1X2_M"] = 0
+            countDic["count_1X2_B"] = 0
+            countDic["count_1X2_SB"] = 0
+
         # Mettre à jour les textes des labels après avoir obtenu count1
         conn.commit()  # Valider les modifications dans la base de données
         update_treeview(rows)
         conn.close()
+        countDic["count_TIP_1"] = countDic["count_1X_1"] + countDic["count_12_1"] + countDic["count_X2_1"]
+        countDic["count_TIP_X"] = countDic["count_1X_X"] + countDic["count_12_X"] + countDic["count_X2_X"]
+        countDic["count_TIP_2"] = countDic["count_1X_2"] + countDic["count_12_2"] + countDic["count_X2_2"]
 
         # print("Nombre de lignes dans la colonne 'count1':", countALL)
         # print("Nombre de lignes dans la colonne 'countDic':", countDic["count_1_1"])
