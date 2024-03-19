@@ -526,7 +526,7 @@ largeur_ecran = root.winfo_screenwidth()   # Largeur de la moitié de l'écran
 hauteur_ecran = root.winfo_screenheight()   # hauteur de la moitié de l'écran
 root.geometry(f"{largeur_ecran}x{hauteur_ecran}")  # Taille de la fenêtre
 root.iconbitmap("IMG/BetSmart_ICO.ico")
-root.config(background="#002f5e")
+root.config(background="#FFF")
 
 # Ajuster la taille de la fenêtre pour qu'elle prenne la taille de l'écran
 root.geometry(f"{largeur_ecran}x{hauteur_ecran}")
@@ -534,18 +534,20 @@ root.state('zoomed')  # Pour Windows
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-# Frame 1 : Logo et Titre
-frame1 = tk.Frame(root, bg="#007acc")
-frame1.pack(fill="x")  # Remplir horizontalement
+# Frame 1 : Logo et Titre 6170B9
+frame1 = tk.Frame(root, bg="#115571", width=largeur_ecran // 2) 
+frame1.pack(side="left", fill="y")  # Remplir verticalement
 # Ajout du logo au premier frame
-logo = tk.PhotoImage(file="IMG/BetSmart_LOGO.png")
-label_logo = tk.Label(frame1, image=logo, bg="#007acc")
+logo = tk.PhotoImage(file="IMG/BetSmart_LOGO.jpg")
+label_logo = tk.Label(frame1, image=logo, bg="#115571")
 label_logo.pack()
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+
+
 # Frame 2 : Labels, Entries et Button
-frame2 = tk.Frame(root, bg="#007acc", width=largeur_ecran)
-frame2.pack(padx=5, pady=5, fill="x")  # Remplir horizontalement avec un padding
+frame2 = tk.Frame(root, bg="#115571", width=largeur_ecran)
+frame2.pack(padx=1, pady=1, fill="x")  # Remplir horizontalement avec un padding
 # Labels
 label1 = tk.Label(frame2, text="1")
 label1.grid(row=0, column=1, padx=5, pady=5)
@@ -567,10 +569,10 @@ button.grid(row=3, columnspan=4, pady=10)
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-# Frame 3 : Vide de couleur rouge
-frame3 = tk.Frame(root, bg="#007acc", width=largeur_ecran // 2)  # Largeur de moitié de la fenêtre
-frame3.pack(side="left", fill="y")  # Remplir verticalement
-
+# Frame 3
+frame3 = tk.Frame(root, bg="#115571", width=largeur_ecran // 2)  # Largeur de moitié de la fenêtre
+frame3.pack(side="left", padx=1, pady=1,fill="both", expand=True)  # Remplir et étendre dans toutes les directions
+#frame1.pack(side="left", fill="y") 
 # Création des labels dans un tableau 8x7
 
 def update_label_texts():
@@ -603,8 +605,8 @@ def update_label_texts():
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
         
 # Frame 4 : Affichage des données MySQL
-frame4 = tk.Frame(root)
-frame4.pack(fill="both", expand=True)  # Remplir et étendre dans toutes les directions
+frame4 = tk.Frame(root, bg="#115571", width=largeur_ecran // 2)
+frame4.pack(padx=1, pady=1,fill="both", expand=True)  # Remplir et étendre dans toutes les directions
 # Créer un Treeview (remplacer les exemples par vos propres données)
 data_tree = ttk.Treeview(frame4, columns=("PAYS", "TEAMS", "1","X", "2", "SCORE", "BUT1", "BUT2","RESULTAT", "PM", "BUT"), show='headings')
 # Use integer values for alignment

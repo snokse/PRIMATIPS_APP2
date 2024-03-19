@@ -22,6 +22,8 @@ Interface utilisateur conviviale : L'application est dotée d'une interface util
 En résumé, "BetSmart Betting Analysis Tool" est un outil puissant pour les amateurs de paris sportifs, offrant des fonctionnalités avancées d'analyse et de visualisation des données pour les aider à prendre des décisions éclairées lors de leurs paris.
 
 
+secteur d'activité de cette app
 
 
+L'application "betsmart Betting Analysis Tool" est principalement destinée à l'analyse et à la gestion des paris sportifs. Son secteur d'activité est donc lié aux jeux d'argent et au domaine des paris sportifs en ligne. Cette application vise à fournir aux utilisateurs des outils et des informations pour les aider à prendre des décisions éclairées lorsqu'ils placent des paris sur des événements sportifs. Elle peut être utilisée par des parieurs professionnels ou amateurs pour analyser les tendances, suivre les performances des équipes et des joueurs, et prendre des décisions stratégiques en matière de paris.
 
